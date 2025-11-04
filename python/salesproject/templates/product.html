@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Users</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-10">   
+<div class="bg-white p-6 rounded-xl shadow-lg max-w-2xl mx-auto">
+  <h2 class="text-xl font-bold mb-4 text-center">Add Product</h2>
+  <form method="POST" action="/" class="insert_data space-y-4" onsubmit="return setFormAction()">
+
+    <!-- Product Name & Manufacture Name -->
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Product Name</label>
+        <input type="text" name="product_Name"
+               class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+               required>
+      </div>
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Manufacture Name</label>
+        <input type="text" name="Manufactura_Name"
+               class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+               required>
+      </div>
+    </div>
+
+    <!-- Product ID & Bar Code -->
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Product ID</label>
+        <input type="text" name="Product_ID"
+               class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+               required>
+      </div>
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Bar Code</label>
+        <input type="text" name="bar_code"
+               class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+               required>
+      </div>
+    </div>
+
+    <!-- Unit Price -->
+  
+    <div>
+      <label class="block text-gray-700 font-medium mb-1">Unit Price</label>
+      <input type="text" name="unit_price"
+             class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+             required>
+    </div>
+  
+      <select name="product_Name" id="product_Name" class="insert_data">
+      <option value="" selected disabled>Select Product</option>
+      {% for row in users %}
+        <option value="{{ row[0] }}">{{ row[0] }}</option>
+      {% endfor %}
+    </select>
+
+
+ 
+
+    <!-- Radio buttons -->
+    <div class="flex items-center gap-6">
+      <label class="flex items-center gap-2 hidden">
+        <input type="radio" id="insert" name="operation" value="insert" checked>
+        Insert
+      </label>
+      <label class="flex items-center gap-2 hidden">
+        <input type="radio" id="update" name="operation" value="update">
+        Update
+      </label>
+    </div>
+
+    <!-- Save Button -->
+    <button type="submit"
+      class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
+      Save
+    </button>
+  </form>
+</div>
+
+
+      
+ <script>
+function setFormAction() {
+    const data = document.querySelector(".insert_data")
+    const operation = document.querySelector('input[name="operation"]:checked').value;
+    const id = document.querySelector('input[name="Product_ID"]').value;
+
+    if (operation === "insert") {
+        data.action = "/"; // insert endpoint
+    } else if (operation === "update") {
+        data.action = "/update/" + id; // update endpoint
+    }
+
+    return true; // Allow form submission
+}
+</script>
+
+    <!-- Users List -->
+ <div class="bg-white p-6 mx-auto rounded-xl shadow-lg mt-9 max-w-2xl">
+  <h1 class="text-2xl font-bold mb-6 text-center">Product Data</h1>
+  <div class="space-y-4">
+    {% for u in users %}
+      <div class="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm">
+        <div>
+          <span class="text-lg font-medium text-gray-800">Product: {{ u[0] }}</span>
+          <span class="block text-sm text-gray-600">Manufacture: {{ u[1] }}</span>
+          <span class="block text-sm text-gray-600">Product ID: {{ u[2] }}</span>
+          <span class="block text-sm text-gray-600">Bar Code: {{ u[3] }}</span>
+          <span class="block text-sm text-gray-600">Unit Price: {{ u[4] }}</span>
+        </div>
+
+         <div class="flex gap-2"> <!-- Update -->
+               <form action="/update/{{ u[2] }}" method="GET"> 
+              <button type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition text-sm"> Update </button> </form>
+
+              <!-- Delete -->
+              <form action="/delete/{{ u[2] }}" method="POST">
+                <button type="submit"
+                  class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition text-sm">
+                  Delete
+                </button>
+              </form>
+            </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+  
+
+</body>
+</html>
